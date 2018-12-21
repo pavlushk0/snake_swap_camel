@@ -6,15 +6,21 @@ import (
 )
 
 func makeFuncProto() {
-	fmt.Println("make func proto")
+
 }
 
-func snakeToCamel() {
-	fmt.Println("snake_to_camel")
+func snakeToCamel(fname string) {
+	file, err := os.Open(fname)
+	if err != nil {
+		fmt.Printf("snakeToCamel(): file %s no exist\n", fname)
+		os.Exit(0)
+	}
+	defer file.Close()
+
 }
 
 func camelToSnake() {
-	fmt.Println("camel_to_snake")
+
 }
 
 func main() {
@@ -23,17 +29,16 @@ func main() {
 		os.Exit(0)
 	}
 
-	if os.Args[1] == "-stc" {
-		snakeToCamel()
+	switch os.Args[1] {
+	case "-stc":
+		snakeToCamel(os.Args[2])
 		os.Exit(0)
-	}
 
-	if os.Args[1] == "-cts" {
+	case "-cts":
 		camelToSnake()
 		os.Exit(0)
-	}
 
-	if os.Args[1] == "-fp" {
+	case "-fp":
 		makeFuncProto()
 		os.Exit(0)
 	}
