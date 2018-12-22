@@ -23,8 +23,33 @@ func readFile(fname string) (out []string) {
 	return out
 }
 
-func makeFuncProto() {
+func makeFuncProto(fname string) {
+	var (
+		funcProto []string
+	)
 
+	fstr := readFile(fname)
+
+	funcProto = append(funcProto, "/* func proto")
+
+	for i := 0; i < len(fstr); i++ {
+		if strings.Contains(fstr[i], "/* func proto") == true {
+			i++
+			for fstr[i] != "*/" {
+				i++
+			}
+		}
+
+		if strings.Contains(fstr[i], "func") {
+			funcProto = append(funcProto, fstr[i])
+		}
+	}
+
+	funcProto = append(funcProto, "*/\n")
+
+	for _, line := range funcProto {
+		fmt.Println(line)
+	}
 }
 
 func snakeToCamel(fname string) {
@@ -49,7 +74,7 @@ func snakeToCamel(fname string) {
 	}
 }
 
-func camelToSnake() {
+func camelToSnake(fname string) {
 
 }
 
@@ -65,11 +90,11 @@ func main() {
 		os.Exit(0)
 
 	case "-cts":
-		camelToSnake()
+		camelToSnake(os.Args[2])
 		os.Exit(0)
 
 	case "-fp":
-		makeFuncProto()
+		makeFuncProto(os.Args[2])
 		os.Exit(0)
 	}
 
