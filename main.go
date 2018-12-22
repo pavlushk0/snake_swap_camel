@@ -1,22 +1,52 @@
 package main
 
 import (
+	io "bufio"
 	"fmt"
 	"os"
+	"strings"
 )
+
+func readFile(fname string) (out []string) {
+	file, err := os.Open(fname)
+	if err != nil {
+		fmt.Printf("readFile(): file %s not exist\n", fname)
+		os.Exit(0)
+	}
+	defer file.Close()
+
+	scanner := io.NewScanner(file)
+	for scanner.Scan() {
+		out = append(out, scanner.Text())
+	}
+
+	return out
+}
 
 func makeFuncProto() {
 
 }
 
 func snakeToCamel(fname string) {
-	file, err := os.Open(fname)
-	if err != nil {
-		fmt.Printf("snakeToCamel(): file %s no exist\n", fname)
-		os.Exit(0)
-	}
-	defer file.Close()
+	fstr := readFile(fname)
 
+	for i := 0; i < len(fstr); i++ {
+		if fstr[i] == "/*" {
+			i++
+			for fstr[i] != "*/" {
+				i++
+			}
+		}
+
+		fid := strings.LastIndex(fstr[i], "func")
+		if fid != -1 {
+			bid := strings.Index(fstr[i], "(")
+
+			funcWrds := strings.Split(fstr[i][fid+5:bid], "_")
+
+			fmt.Println(funcWrds)
+		}
+	}
 }
 
 func camelToSnake() {
